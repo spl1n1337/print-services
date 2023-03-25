@@ -3,14 +3,18 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Получаем данные из формы
   $phone = $_POST["phone"];
+  
+  $from = "form@" . $_SERVER['HTTP_HOST'];
 
+  
   // Формируем сообщение
   $message = "Телефон: " . $phone;
 
   // Отправляем сообщение на указанный email-адрес qweqweeqwewqewqe
   $to = "panov1337.lp@gmail.com";
   $subject = "Запрос на обратный звонок";
-  $headers = "From: qweqweweqweweqw@spl1n1337.ru";
+  $headers = "From: $from";
+  // $headers = "From: qweqweweqweweqw@spl1n1337.ru";
 
   if (mail($to, $subject, $message, $headers)) {
     // Если сообщение отправлено успешно, возвращаем успешный статус
