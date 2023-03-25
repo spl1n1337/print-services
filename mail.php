@@ -3,7 +3,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Получаем данные из формы
   $phone = $_POST["phone"];
-  
+  //Получаем url адрес хостинга и создаем переменную from со значением from@URL
   $from = "form@" . $_SERVER['HTTP_HOST'];
 
   
@@ -12,9 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Отправляем сообщение на указанный email-адрес qweqweeqwewqewqe
   $to = "panov1337.lp@gmail.com";
+  //Присваемваем значение заголовку письма
   $subject = "Запрос на обратный звонок";
+  //помещаем в заголовок переменную from@URL
   $headers = "From: $from";
-  // $headers = "From: qweqweweqweweqw@spl1n1337.ru";
 
   if (mail($to, $subject, $message, $headers)) {
     // Если сообщение отправлено успешно, возвращаем успешный статус
