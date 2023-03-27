@@ -59,41 +59,86 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
   // Form 
-  var form = document.querySelectorAll("form");
-var thankyou = document.getElementById("thankyou");
-var overlay1 = document.querySelector('.overlay1');
+//   var form = document.querySelectorAll("form");
+// var thankyou = document.getElementById("thankyou");
+// var overlay1 = document.querySelector('.overlay1');
 
-// Обрабатываем отправку формы
-form.forEach(function(form) {
-  form.addEventListener("submit", function(event) {
-  event.preventDefault();
+// // Обрабатываем отправку формы
+// form.forEach(function(form) {
+//   form.addEventListener("submit", function(event) {
+//   event.preventDefault();
   
-  // Отправляем данные формы на сервер
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "mail.php");
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      // Если ответ получен, обрабатываем его
-      var response = JSON.parse(xhr.responseText);
-      if (response.status === "success") {
-        // Если отправка прошла успешно, показываем блок "thankyou"
+//   // Отправляем данные формы на сервер
+//   var xhr = new XMLHttpRequest();
+//   xhr.open("POST", "mail.php");
+//   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//   xhr.onreadystatechange = function() {
+//     if (xhr.readyState === 4) {
+//       // Если ответ получен, обрабатываем его
+//       var response = JSON.parse(xhr.responseText);
+//       if (response.status === "success") {
+//         // Если отправка прошла успешно, показываем блок "thankyou"
+//         thankyou.style.display = "block";
+//         overlay1.style.display = "block";
+//         // Скрываем блок через 2 секунды
+//         setTimeout(function() {
+//           thankyou.style.display = "none";
+//           overlay1.style.display = "none";
+//           // Перенаправляем пользователя на страницу index.html
+//           window.location.href = "index.html";
+//         }, 2000);
+//       } else {
+//         // Если произошла ошибка при отправке, показываем сообщение с ошибкой
+//         alert(response.message);
+//       }
+//     }
+//   };
+//   xhr.send("name=" + encodeURIComponent(form.name.value) + "&phone=" + encodeURIComponent(form.phone.value));
+//   });
+//   });
+const form = document.querySelectorAll("form");
+const thankyou = document.getElementById("thankyou");
+const overlay1 = document.querySelector(".overlay1");
+
+form.forEach(element => {
+  element.addEventListener("submit", async (event) => {
+    event.preventDefault();
+  
+    try {
+      const response = await fetch("mail.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(new FormData(form)).toString(),
+      });
+  
+      const data = await response.json();
+      if (data.status === "success") {
         thankyou.style.display = "block";
         overlay1.style.display = "block";
-        // Скрываем блок через 2 секунды
-        setTimeout(function() {
+  
+        setTimeout(() => {
           thankyou.style.display = "none";
           overlay1.style.display = "none";
-          // Перенаправляем пользователя на страницу index.html
-          window.location.href = "index.html";
+          form.reset();
         }, 2000);
       } else {
-        // Если произошла ошибка при отправке, показываем сообщение с ошибкой
-        alert(response.message);
+        alert(data.message);
       }
+    } catch (error) {
+      console.error(error);
+      alert("Ошибка при отправке формы");
     }
-  };
-  xhr.send("name=" + encodeURIComponent(form.name.value) + "&phone=" + encodeURIComponent(form.phone.value));
   });
-  });
+  
+});
+
+
+
+
+
+
+
+
 });
